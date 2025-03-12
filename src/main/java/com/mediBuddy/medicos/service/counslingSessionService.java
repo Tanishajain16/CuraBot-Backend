@@ -128,7 +128,7 @@ public class counslingSessionService {
 
 
     @Transactional
-    public CounslingSessionDTO analyzeText(MultipartFile file, String sessionId) {
+    public CounslingSessionDTO analyzeText(MultipartFile file, String sessionId,String language) {
         Optional<CounslingSession> cs = csrepo.findById(sessionId);
         if (cs.isEmpty()) {
 throw new ResourceNotFoundException("Counsling Session Not found");
@@ -144,7 +144,7 @@ throw new ResourceNotFoundException("Counsling Session Not found");
         String cleanedText = gm.preprocessText(content);
         System.out.println("File Text Is This :-" + cleanedText);
 
-        String summary = gm.generateSummary(cleanedText);
+        String summary = gm.generateSummary(cleanedText,language);
         String requestPayload = gm.createRequestPayload(summary);
         List<Question> qaPairs = gm.fetchQuestionsFromGeminiSummary(requestPayload, sessionId);
 
@@ -154,7 +154,7 @@ throw new ResourceNotFoundException("Counsling Session Not found");
 
         qaPairs=qr.saveAll(qaPairs);
 
-        String precaution = gm.generatePrecautions(cleanedText);
+        String precaution = gm.generatePrecautions(cleanedText,language);
         System.out.println(precaution);
 
         CounslingSession c = cs.get();

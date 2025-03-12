@@ -5,6 +5,7 @@ import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.mediBuddy.medicos.model.CounslingSession;
 import com.mediBuddy.medicos.model.Question;
+import com.mediBuddy.medicos.model.SOS;
 import com.mediBuddy.medicos.model.User;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
@@ -18,6 +19,7 @@ import jakarta.activation.DataSource;
 import jakarta.mail.util.ByteArrayDataSource;
 
 import java.io.ByteArrayOutputStream;
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -135,4 +137,55 @@ public class AdditionalFeatures {
         ByteArrayOutputStream pdfOutputStream = generatePDF(session, user);
         sendEmailWithAttachment(user.getEmail(), "Counseling Session Report", pdfOutputStream);
     }
+
+    private void sendHtmlEmail(String recipientEmail, String subject, String body) {
+        try {
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true);
+
+            helper.setFrom(SENDER_EMAIL);
+            helper.setTo(recipientEmail);
+            helper.setSubject(subject);
+            helper.setText(body, true);  // 'true' here indicates that the body is HTML content
+
+            mailSender.send(message);
+            System.out.println("Email sent successfully to " + recipientEmail);
+        } catch (MessagingException e) {
+            e.printStackTrace();
+            System.out.println("Error sending HTML email: " + e.getMessage());
+        }
+    }
+
+
+    public String sendEmail(List<SOS> sosList, String location) {
+        try {
+            // Construct the subject and the body of the email
+            String subject = "SOS Alert - Immediate Attention Required";
+            String body = "<html><body>"
+                    + "<p>Dear Professional,</p>"
+                    + "<p>We have received an SOS alert from a user. The location of the alert is: <b>" + location + "</b>.</p>"
+                    + "<p>Please review the situation and take necessary action.</p>"
+                    + "<p>If you need further details, please contact us at support@mediBuddy.com.</p>"
+                    + "<p>Best regards,<br>The MediBuddy Team</p>"
+                    + "<hr>"
+                    + "<p><i>--------------------------------------------</i></p>"
+                    + "</body></html>";
+
+            // Loop through each SOS object in the list
+            for (SOS sos : sosList) {
+                // Send the email to the email address in the SOS object
+                sendHtmlEmail(sos.getEmail(), subject, body);  // Send the HTML email without a PDF attachment
+                System.out.println("Email sent to: " + sos.getEmail());
+            }
+
+            // Return a success message after processing all emails
+            return "Emails sent successfully to all professionals.";
+        } catch (Exception e) {
+            // Log and return the error message in case of failure
+            e.printStackTrace();
+            return "Error sending emails: " + e.getMessage();
+        }
+    }
+
+
 }

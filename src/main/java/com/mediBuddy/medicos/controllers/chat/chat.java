@@ -19,8 +19,8 @@ public class chat {
     private  final chatService cs;
 
     @GetMapping("/{message}")
-    public ResponseEntity<ApiResponseProject<String>> getMessage(@PathVariable String message){
-        String s= cs.response(message);
+    public ResponseEntity<ApiResponseProject<String>> getMessage(@PathVariable String message , @RequestParam(value = "language",defaultValue = "English") String language){
+        String s= cs.response(message,language);
         ApiResponseProject<String> response = new ApiResponseProject<>("Success","All Domain Get Succ",s);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

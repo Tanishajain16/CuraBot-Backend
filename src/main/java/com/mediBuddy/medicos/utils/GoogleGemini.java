@@ -166,14 +166,14 @@ public class GoogleGemini {
 
 
 
-    public String generateSummary(String FileText) {
+    public String generateSummary(String FileText,String Language) {
         try {
             // Create request payload
             String requestPayload = "{\n" +
                     "  \"contents\": [\n" +
                     "    {\n" +
                     "      \"parts\": [\n" +
-                    "        {\"text\": \"Summarize the following text: \\\"" + FileText + "in 500 words in this form Summary : dont use bold markers in hindi"+ "\\\"\"}\n" +
+                    "        {\"text\": \"Summarize the following text: \\\"" + FileText + "in 500 words in this form Summary : dont use bold markers in"+Language+ "\\\"\"}\n" +
                     "      ]\n" +
                     "    }\n" +
                     "  ]\n" +
@@ -213,14 +213,14 @@ public class GoogleGemini {
 
 
 
-    public String generatePrecautions(String FileText) {
+    public String generatePrecautions(String FileText,String language) {
         try {
             // Create request payload
             String requestPayload = "{\n" +
                     "  \"contents\": [\n" +
                     "    {\n" +
                     "      \"parts\": [\n" +
-                    "        {\"text\": \"Create medical Precaution  the following text: \\\"" + FileText + "in 500 words in this form Precaution : dont use bold markers in hindi"+ "\\\"\"}\n" +
+                    "        {\"text\": \"Create medical Precaution  the following text: \\\"" + FileText + "in 500 words in this form Precaution : dont use bold markers in "+language+ "\\\"\"}\n" +
                     "      ]\n" +
                     "    }\n" +
                     "  ]\n" +
@@ -268,18 +268,20 @@ public class GoogleGemini {
 
 
 
-    public String generateChatResponse(String message) {
+    public String generateChatResponse(String message,String language) {
         try {
+            // Create request payload
             // Create request payload
             String requestPayload = "{\n" +
                     "  \"contents\": [\n" +
                     "    {\n" +
                     "      \"parts\": [\n" +
-                    "        {\"text\": \"You Are A doctor give  medical response of   the following question or query : \\\"" + message + " Reply As A doctor"+ "\\\"\"}\n" +
+                    "        {\"text\": \"You are a licensed medical professional. As a doctor, your task is to provide a well-informed and accurate response to the following query. Respond in a detailed, professional, and compassionate manner, as you would in a medical consultation. The patient’s question is: '\\\"" + message + "\\\"'\\nPlease answer in " + language + ". Be clear and precise, providing relevant medical advice, potential symptoms, and any necessary next steps for the patient.\"}\n" +
                     "      ]\n" +
                     "    }\n" +
                     "  ]\n" +
                     "}";
+
 
             // Send POST request to Gemini API
             HttpHeaders headers = new HttpHeaders();

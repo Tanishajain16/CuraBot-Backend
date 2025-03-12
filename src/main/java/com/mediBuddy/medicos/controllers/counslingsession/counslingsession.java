@@ -31,10 +31,10 @@ public class counslingsession {
     @PostMapping("/analyze/text")
     public ResponseEntity<ApiResponseProject<CounslingSessionDTO>> analyzeText(
             @RequestParam("file") MultipartFile file,
-            @RequestParam("sessionId") String sessionId
+            @RequestParam("sessionId") String sessionId,
+            @RequestParam(value = "language",defaultValue = "English") String language
     ){
-
-        CounslingSessionDTO c= cs.analyzeText(file,sessionId);
+        CounslingSessionDTO c= cs.analyzeText(file,sessionId,language);
         ApiResponseProject<CounslingSessionDTO> response = new ApiResponseProject<>("success","counsling session sumarized",c);
 
         return new ResponseEntity<>(response, HttpStatus.CREATED);

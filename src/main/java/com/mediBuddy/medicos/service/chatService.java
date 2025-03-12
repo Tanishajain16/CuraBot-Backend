@@ -11,8 +11,8 @@ public class chatService {
 
     private final GoogleGemini gm;
 
-    public  String response(String message){
-        return gm.generateChatResponse(message);
+    public  String response(String message,String language){
+        return gm.generateChatResponse(message,language);
     }
 
 }
